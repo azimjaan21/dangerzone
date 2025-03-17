@@ -21,9 +21,23 @@ def save_polygons(request):
     if request.method == "POST":
         data = json.loads(request.body)
         global polygons
-        polygons = [Polygon([(p["x"], p["y"]) for p in poly]) for poly in data.get("polygons", [])]
+
+        ORIGINAL_WIDTH = 800  # Change this to match the actual video size
+        ORIGINAL_HEIGHT = 450
+        NEW_WIDTH = 640
+        NEW_HEIGHT = 360
+
+        scale_x = NEW_WIDTH / ORIGINAL_WIDTH
+        scale_y = NEW_HEIGHT / ORIGINAL_HEIGHT
+
+        polygons = [
+            Polygon([(p["x"] * scale_x, p["y"] * scale_y) for p in poly])
+            for poly in data.get("polygons", [])
+        ]
+
         return JsonResponse({"message": "Polygons saved successfully!"})
     return JsonResponse({"error": "Invalid request"}, status=400)
+
 
 def get_polygons(request):
     """ Send saved polygons to frontend """
@@ -52,6 +66,9 @@ def generate_frames():
                 if cls == 0:  # Person class
                     point = Point(center_x, center_y)
                     in_danger = any(poly.contains(point) for poly in polygons)
+
+                    print(f"Worker detected at: ({center_x}, {center_y})")
+                    print(f"Is in danger zone? {in_danger}")
 
                     color = (0, 0, 255) if in_danger else (0, 255, 0)  # Red if in danger, Green if safe
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)

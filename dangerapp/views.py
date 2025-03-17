@@ -40,6 +40,10 @@ def save_polygons(request):
         return JsonResponse({"message": "Polygons saved successfully!"})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+# New function to send saved polygons to frontend
+def get_polygons(request):
+    return JsonResponse({"polygons": polygons})
+
 # Video streaming endpoint
 def video_feed(request):
     return StreamingHttpResponse(generate_frames(),

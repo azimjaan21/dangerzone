@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function initializeKonva(video) {
         console.log("🔧 Initializing Konva.js...");
 
-        // Ensure konva-container has correct size
         container.style.position = "absolute";
         container.style.left = video.offsetLeft + "px";
         container.style.top = video.offsetTop + "px";
@@ -39,6 +38,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let polygons = [];
         let currentPolygon = null;
+
+        // Load saved polygons from Django
+        fetch("/get_polygons/")
+            .then(response => response.json())
+            .then(data => {
+                data.polygons.forEach(points => {
+                    let polygon = new Konva.Line({
+                        points: points.flatMap(p => [p.x, p.y]),
+                        fill: 'rgba(255, 0, 0, 0.3)',
+                        stroke: 'red',
+                        strokeWidth: 2,
+                        closed: true,
+                        draggable: true
+                    });
+                    layer.add(polygon);
+                    polygons.push(polygon);
+                });
+                layer.draw();
+            });
 
         // Function to start drawing a polygon
         window.startDrawing = function () {
@@ -100,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(response => response.json())
             .then(data => console.log("✅ Polygon saved successfully!", data))
-            .catch(error => console.error("❌ ERROR: ", error));
+            .catch(error => console.error("❌ ERROR:", error));
         };
 
         // Function to get CSRF token from Django

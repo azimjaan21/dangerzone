@@ -13,6 +13,9 @@ dangerapp/migrations/
 # Ignore media/uploads (if you plan to use user uploads)
 data/
 
+# Yolo weights
+*.pt
+
 # Ignore compiled code
 *.so
 

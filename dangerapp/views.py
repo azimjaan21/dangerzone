@@ -1,6 +1,9 @@
 import cv2
 from django.http import StreamingHttpResponse
 from django.shortcuts import render
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 VIDEO_PATH = "./dangerapp/static/data/cam4.mp4"
@@ -18,6 +21,24 @@ def generate_frames():
         frame_bytes = buffer.tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        
+
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+# Store polygons in memory (for now)
+polygons = []
+
+@csrf_exempt
+def save_polygons(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        global polygons
+        polygons = data.get("polygons", [])
+        return JsonResponse({"message": "Polygons saved successfully!"})
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 # Video streaming endpoint
 def video_feed(request):

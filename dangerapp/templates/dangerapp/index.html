@@ -5,13 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danger Zone Monitoring</title>
+    
+    <!-- Konva.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+
     <h1>Danger Zone Monitoring</h1>
-    
-    <!-- Video Stream -->
-    <img src="{% url 'video_feed' %}" width="800" height="450">
+
+    <!-- Video Stream with Konva Canvas Overlay -->
+    <div id="video-container">
+        <img id="video-stream" src="{% url 'video_feed' %}" width="1000" height="850">
+        <div id="konva-container"></div>
+    </div>
+
+    <!-- Polygon Controls -->
+    <div id="controls">
+        <button onclick="startDrawing()">Draw Polygon</button>
+        <button onclick="clearPolygons()">Clear</button>
+        <button onclick="savePolygons()">Save</button>
+    </div>
+
+    <script src="{% static 'js/polygon_zone.js' %}"></script>
 
 </body>
 </html>

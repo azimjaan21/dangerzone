@@ -6,11 +6,16 @@ from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ultralytics import YOLO
 from shapely.geometry import Point, Polygon
+import torch
 
 VIDEO_PATH = "./dangerapp/static/data/cam4.mp4"
 
-# Load YOLOv8 model (Ensure model is downloaded)
-model = YOLO("yolov8m.pt")  # Uses YOLOv8 Medium model (change if needed)
+# ✅ Load the optimized YOLOv8 nano model
+model = YOLO("yolov8m.pt")  # Using YOLOv8-nano for faster inference
+
+# ✅ Enable GPU acceleration if available
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model.to(device)
 
 # Store polygons
 polygons = []
@@ -43,19 +48,29 @@ def get_polygons(request):
     """ Send saved polygons to frontend """
     return JsonResponse({"polygons": [[{"x": p.x, "y": p.y} for p in poly.exterior.coords] for poly in polygons]})
 
+
 def generate_frames():
-    """ Process video frames, run YOLO, and check for danger zones """
+    """ Process video frames, run YOLO every 3rd frame, and check for danger zones """
 
     cap = cv2.VideoCapture(VIDEO_PATH)
-    
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # ✅ Reduce buffering lag
+
+    frame_count = 0  # Frame counter
+    last_results = None  # Store last YOLO detection
+
     while True:
         success, frame = cap.read()
         if not success:
             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             continue
 
-        frame = cv2.resize(frame, (640, 360))  # Resize for better performance
-        results = model(frame)  # Run YOLOv8 detection
+        frame = cv2.resize(frame, (640, 360))  # ✅ Resize for better performance
+        frame_count += 1
+
+        # ✅ Run YOLO only every 3rd frame
+        if frame_count % 3 == 0:
+            last_results = model(frame, device=device)  # Run YOLO
+        results = last_results if last_results else model(frame, device=device)
 
         for result in results:
             for box in result.boxes:
@@ -66,9 +81,6 @@ def generate_frames():
                 if cls == 0:  # Person class
                     point = Point(center_x, center_y)
                     in_danger = any(poly.contains(point) for poly in polygons)
-
-                    print(f"Worker detected at: ({center_x}, {center_y})")
-                    print(f"Is in danger zone? {in_danger}")
 
                     color = (0, 0, 255) if in_danger else (0, 255, 0)  # Red if in danger, Green if safe
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
@@ -81,9 +93,11 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
+
 def video_feed(request):
     """ Stream video with YOLO detection and danger zone alerts """
     return StreamingHttpResponse(generate_frames(), content_type="multipart/x-mixed-replace; boundary=frame")
+
 
 def index(request):
     """ Render the main page """

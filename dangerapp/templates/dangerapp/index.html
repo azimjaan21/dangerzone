@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danger Zone Monitoring</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Danger Zone Monitoring</h1>
+    
+    <!-- Video Stream -->
+    <img src="{% url 'video_feed' %}" width="800" height="450">
+
+</body>
+</html>

@@ -3,7 +3,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render
 
 
-VIDEO_PATH = "./dangerapp/static/videos/sample.mp4"
+VIDEO_PATH = "./dangerapp/static/data/cam4.mp4"
 
 # Function to generate video frames
 def generate_frames():

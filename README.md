@@ -3,7 +3,7 @@
 > **Real-time worker safety monitoring using AI & Computer Vision**  
 > **Detects workers in hazardous zones & issues instant alerts**  
 
-
+![2025-03-2014-14-33-ezgif com-video-to-gif-converter+(1)](https://github.com/user-attachments/assets/00a7b22b-5cf0-4039-b091-11de38cc74da)
 
 ---
 

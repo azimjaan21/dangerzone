@@ -22,19 +22,26 @@ polygons = []
 
 @csrf_exempt
 def save_polygons(request):
-    """ Save drawn polygons from the frontend """
+    """ Save drawn polygons from the frontend and adjust scaling dynamically """
     if request.method == "POST":
         data = json.loads(request.body)
         global polygons
 
-        ORIGINAL_WIDTH = 800  # Change this to match the actual video size
-        ORIGINAL_HEIGHT = 450
-        NEW_WIDTH = 640
-        NEW_HEIGHT = 360
+        # Get actual video dimensions
+        cap = cv2.VideoCapture(VIDEO_PATH)
+        ORIGINAL_WIDTH = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        ORIGINAL_HEIGHT = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        cap.release()
 
-        scale_x = NEW_WIDTH / ORIGINAL_WIDTH
-        scale_y = NEW_HEIGHT / ORIGINAL_HEIGHT
+        # New displayed video size (adjust if needed)
+        NEW_WIDTH = 1280  # Change based on actual video display size
+        NEW_HEIGHT = 720
 
+        # Compute scale factors dynamically
+        scale_x = ORIGINAL_WIDTH / NEW_WIDTH
+        scale_y = ORIGINAL_HEIGHT / NEW_HEIGHT
+
+        # Rescale polygon coordinates to match original video
         polygons = [
             Polygon([(p["x"] * scale_x, p["y"] * scale_y) for p in poly])
             for poly in data.get("polygons", [])
@@ -42,6 +49,7 @@ def save_polygons(request):
 
         return JsonResponse({"message": "Polygons saved successfully!"})
     return JsonResponse({"error": "Invalid request"}, status=400)
+
 
 
 def get_polygons(request):
@@ -55,6 +63,17 @@ def generate_frames():
     cap = cv2.VideoCapture(VIDEO_PATH)
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # ✅ Reduce buffering lag
 
+    # Get original video dimensions
+    ORIGINAL_WIDTH = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    ORIGINAL_HEIGHT = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # New displayed video size
+    NEW_WIDTH = 1280  # Adjust based on your actual display size
+    NEW_HEIGHT = 720
+
+    scale_x = NEW_WIDTH / ORIGINAL_WIDTH
+    scale_y = NEW_HEIGHT / ORIGINAL_HEIGHT
+
     frame_count = 0  # Frame counter
     last_results = None  # Store last YOLO detection
 
@@ -64,7 +83,7 @@ def generate_frames():
             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             continue
 
-        frame = cv2.resize(frame, (640, 360))  # ✅ Resize for better performance
+        frame = cv2.resize(frame, (NEW_WIDTH, NEW_HEIGHT))  # ✅ Resize for display
         frame_count += 1
 
         # ✅ Run YOLO only every 3rd frame
@@ -78,8 +97,12 @@ def generate_frames():
                 cls = int(box.cls[0])  # Class ID
                 center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2  # Get center of bounding box
 
+                # Scale detection coordinates back to original space
+                orig_center_x = center_x * scale_x
+                orig_center_y = center_y * scale_y
+
                 if cls == 0:  # Person class
-                    point = Point(center_x, center_y)
+                    point = Point(orig_center_x, orig_center_y)
                     in_danger = any(poly.contains(point) for poly in polygons)
 
                     color = (0, 0, 255) if in_danger else (0, 255, 0)  # Red if in danger, Green if safe

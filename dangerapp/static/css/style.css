@@ -1,23 +1,94 @@
-/* General page styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    text-align: center;
+/* Ensure dark mode is applied */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Heading styles */
+/* Dark Mode */
+body {
+    background-color: #121212 !important;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Title */
 h1 {
-    color: #333;
-    margin-top: 25px;
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #ffcc00;
 }
 
-/* Video container */
-img {
-    border: 3px solid #333;
-    border-radius: 10px;
-    margin-top: 20px;
+/* Video Container */
+#video-container {
+    position: relative;
+    width: 90vw;
+    height: 80vh;
     max-width: 100%;
-    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Video Stream (Bigger & Fullscreen) */
+#video-stream {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Konva Canvas Overlay */
+#konva-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Control Buttons */
+#controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Button Styles */
+button {
+    font-size: 18px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+/* Button Colors */
+.draw-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.clear-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Hover Effects */
+button:hover {
+    opacity: 0.8;
 }

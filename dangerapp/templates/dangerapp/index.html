@@ -9,6 +9,7 @@
     <!-- Konva.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
     
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -17,15 +18,15 @@
 
     <!-- Video Stream with Konva Canvas Overlay -->
     <div id="video-container">
-        <img id="video-stream" src="{% url 'video_feed' %}" width="1000" height="850">
+        <img id="video-stream" src="{% url 'video_feed' %}">
         <div id="konva-container"></div>
     </div>
 
     <!-- Polygon Controls -->
     <div id="controls">
-        <button onclick="startDrawing()">Draw Polygon</button>
-        <button onclick="clearPolygons()">Clear</button>
-        <button onclick="savePolygons()">Save</button>
+        <button class="draw-btn" onclick="startDrawing()">Draw Polygon</button>
+        <button class="clear-btn" onclick="clearPolygons()">Clear</button>
+        <button class="save-btn" onclick="savePolygons()">Save</button>
     </div>
 
     <script src="{% static 'js/polygon_zone.js' %}"></script>

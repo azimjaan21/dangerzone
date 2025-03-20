@@ -28,7 +28,9 @@ Used in **construction sites, factories, and industrial zones** to **reduce acci
 ---
 
 ## 📸 **Demo**
-![Danger Zone Monitoring](assets/demo.png)  <!-- Replace with actual demo image -->
+![image](https://github.com/user-attachments/assets/0ef38820-8299-4378-8478-11f49a3097cb)
+![image](https://github.com/user-attachments/assets/93e66a1f-314d-4753-bfea-09c098730f2e)
+
 
 ---
 
@@ -48,3 +50,4 @@ Used in **construction sites, factories, and industrial zones** to **reduce acci
 ```bash
 git clone https://github.com/yourusername/DangerZoneMonitoring.git
 cd DangerZoneMonitoring
+```

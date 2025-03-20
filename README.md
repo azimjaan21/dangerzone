@@ -51,3 +51,26 @@ Used in **construction sites, factories, and industrial zones** to **reduce acci
 git clone https://github.com/yourusername/DangerZoneMonitoring.git
 cd DangerZoneMonitoring
 ```
+### **2️⃣ Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
+### **3️⃣ Run the Django Server**
+```bash
+python manage.py runserver
+```
+-------
+**⚙️ Usage Guide**
+🔹 Drawing & Saving Danger Zones
+Open the web interface.
+Click "Draw Polygon" to outline restricted areas.
+Click "Save" to store the zones.
+🔹 Worker Detection & Alerts
+If a worker enters a danger zone, their bounding box turns RED and an alert appears.
+If the worker is safe, their bounding box remains GREEN.
+
+**🤝 Contributions & Support**
+💡 Have ideas to improve this project? Feel free to contribute!
+📧 For questions & code requests: azimjaan21@gmail.com
+
+📌 GitHub Issues & PRs are welcome!

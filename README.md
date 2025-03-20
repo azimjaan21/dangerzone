@@ -60,7 +60,7 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 -------
-**⚙️ Usage Guide**
+## **⚙️ Usage Guide**
 
 🔹 Drawing & Saving Danger Zones
 Open the web interface.
@@ -75,7 +75,7 @@ If a worker enters a danger zone, their bounding box turns RED and an alert appe
 If the worker is safe, their bounding box remains GREEN.
 
 
-**🤝 Contributions & Support**
+## **🤝 Contributions & Support**
 
 💡 Have ideas to improve this project? Feel free to contribute!
 

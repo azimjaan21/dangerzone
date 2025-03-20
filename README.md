@@ -3,7 +3,7 @@
 > **Real-time worker safety monitoring using AI & Computer Vision**  
 > **Detects workers in hazardous zones & issues instant alerts**  
 
-![Demo](assets/demo.gif)  <!-- Replace with actual demo image or GIF -->
+
 
 ---
 

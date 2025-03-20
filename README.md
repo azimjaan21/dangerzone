@@ -65,6 +65,7 @@ python manage.py runserver
 Open the web interface.
 Click "Draw Polygon" to outline restricted areas.
 Click "Save" to store the zones.
+
 🔹 Worker Detection & Alerts
 If a worker enters a danger zone, their bounding box turns RED and an alert appears.
 If the worker is safe, their bounding box remains GREEN.
